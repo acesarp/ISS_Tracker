@@ -7,7 +7,7 @@ import { flareClass, type NoaaScale, type SpaceWeather } from "@/lib/space-weath
 
 import Sparkline from "./Sparkline";
 
-// NOAA updates these feeds once a minute.
+/** NOAA updates these feeds once a minute */
 const POLL_INTERVAL_MS = 60_000;
 
 // Kp 5 is a G1 storm, each step up is one G level, through G5 at Kp 9.
@@ -51,6 +51,7 @@ function Card({ title, children }: { title: string; children: ReactNode }) {
   );
 }
 
+/**  */
 export default function SpaceWeatherPanel() {
   const [data, setData] = useState<SpaceWeather | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -108,10 +109,7 @@ export default function SpaceWeatherPanel() {
           </>
         )}
       </div>
-
-      {error && (
-        <p className="text-sm text-red-300">Last update failed ({error}); showing the previous data.</p>
-      )}
+      {error && ( <p className="text-sm text-red-300">Last update failed ({error}); showing the previous data.</p>  )}
 
       <div className="grid gap-3 md:grid-cols-3">
         <Card title="Solar flares · GOES X-ray">

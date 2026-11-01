@@ -20,7 +20,7 @@ type Props = {
   label: string;
 };
 
-// A minimal line chart: time on x, value on y, with labelled horizontal reference lines.
+/** A minimal line chart: time on x, value on y, with labelled horizontal reference lines */
 export default function Sparkline({ points, min, max, scale = (v) => v, thresholds = [], className, label }: Props) {
   if (points.length < 2) {
     return null;

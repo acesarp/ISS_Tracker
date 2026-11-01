@@ -8,10 +8,10 @@ import type { IssPosition, IssTrack } from "@/lib/iss";
 import WorldMap, { type MapView } from "./WorldMap";
 
 const POLL_INTERVAL_MS = 3000;
-// The server recomputes the predicted track every 30 seconds.
+/** The server recomputes the predicted track every 30 seconds. */
 const TRACK_POLL_INTERVAL_MS = 30_000;
 
-function formatCoordinate(value: number, positive: string, negative: string) {
+function formatCoordinate(value: number, positive: string, negative: string) : string {
   return `${Math.abs(value).toFixed(2)}° ${value >= 0 ? positive : negative}`;
 }
 
@@ -26,8 +26,7 @@ export default function IssTracker() {
     let cancelled = false;
     let timer: ReturnType<typeof setTimeout> | undefined;
 
-    // Schedules the next poll only after the current one finishes, so slow responses
-    // never stack up overlapping requests.
+    /** Schedules the next poll only after the current one finishes, so slow responses never stack up overlapping requests */
     async function poll() {
       try {
         const res = await fetch(`${BASE_PATH}/api/iss`, { cache: "no-store" });
@@ -38,9 +37,11 @@ export default function IssTracker() {
         if (cancelled) return;
         setPosition(next);
         setError(null);
-      } catch (err) {
+      } 
+      catch (err) {
         if (!cancelled) setError(err instanceof Error ? err.message : String(err));
-      } finally {
+      } 
+      finally {
         if (!cancelled) timer = setTimeout(poll, POLL_INTERVAL_MS);
       }
     }

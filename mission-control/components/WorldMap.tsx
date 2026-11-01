@@ -1,21 +1,11 @@
 "use client";
 
-import {
-  geoCircle,
-  geoDistance,
-  geoEquirectangular,
-  geoGraticule10,
-  geoOrthographic,
-  geoPath,
-  type GeoPath,
-  type GeoProjection,
-} from "d3-geo";
+import { geoCircle, geoDistance, geoEquirectangular, geoGraticule10, geoOrthographic, geoPath, type GeoPath, type GeoProjection } from "d3-geo";
 import type { LineString } from "geojson";
 import { type PointerEvent, useMemo, useRef, useState } from "react";
 import { feature } from "topojson-client";
 import type { GeometryCollection, Topology } from "topojson-specification";
 import countriesJson from "world-atlas/countries-110m.json";
-
 import { BASE_PATH } from "@/lib/base-path";
 import type { IssPosition } from "@/lib/iss";
 
@@ -25,9 +15,9 @@ const MAP_WIDTH = 1060;
 const MAP_HEIGHT = 780;
 const GLOBE_SIZE = 780;
 const KM_PER_DEGREE = 111.32;
-// Degrees the globe turns per pixel dragged.
+/** Degrees the globe turns per pixel dragged */
 const DRAG_SENSITIVITY = 0.4;
-// The ISS marker is a round photo; public/ files need the base path, unlike <Link>s.
+/** The ISS marker is a round photo; public/ files need the base path, unlike <Link>s. */
 const AVATAR_RADIUS = 28;
 
 const topology = countriesJson as unknown as Topology<{ countries: GeometryCollection }>;
@@ -44,7 +34,7 @@ const mapStatic = {
   countries: mapPath(countries) ?? "",
 };
 
-// Wraps any longitude into [-180, 180]; wheretheiss.at reports the Sun's in [0, 360].
+/** Wraps any longitude into [-180, 180]; wheretheiss.at reports the Sun's in [0, 360] */
 function wrapLongitude(lon: number) {
   return ((((lon + 180) % 360) + 360) % 360) - 180;
 }
@@ -66,7 +56,7 @@ type LayersProps = Omit<Props, "view"> & {
   oceanFill: string;
 };
 
-// Everything drawn on top of the projection; the same for the flat map and the globe.
+/** Everything drawn on top of the projection; the same for the flat map and the globe */
 function Layers({ projection, path, staticPaths, center, oceanFill, position, pastTrack, futureTrack }: LayersProps) {
   // Night is the hemisphere centered on the point opposite the Sun.
   const nightPath = position
@@ -85,7 +75,7 @@ function Layers({ projection, path, staticPaths, center, oceanFill, position, pa
       )
     : null;
 
-  // d3 clips lines at the antimeridian on the map and at the horizon on the globe.
+  /** d3 clips lines at the antimeridian on the map and at the horizon on the globe */
   const trackPath = (points: [number, number][]) => {
     if (points.length < 2) return null;
     const line: LineString = { type: "LineString", coordinates: points };
@@ -94,8 +84,7 @@ function Layers({ projection, path, staticPaths, center, oceanFill, position, pa
   const pastPath = trackPath(pastTrack);
   const futurePath = trackPath(futureTrack);
 
-  const issOnVisibleSide =
-    position && (!center || geoDistance([position.longitude, position.latitude], center) < Math.PI / 2);
+  const issOnVisibleSide =  position && (!center || geoDistance([position.longitude, position.latitude], center) < Math.PI / 2);
   const marker = issOnVisibleSide ? projection([position.longitude, position.latitude]) : null;
 
   return (

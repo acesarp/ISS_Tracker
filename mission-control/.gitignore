@@ -1,3 +1,10 @@
+*.vsidx
+/.vs/slnx.sqlite
+/svg-world-maps-main/svg-world-maps-main
+*.wsuo
+*.sqlite-journal
+*.sqlite
+
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 .env.local
 # dependencies

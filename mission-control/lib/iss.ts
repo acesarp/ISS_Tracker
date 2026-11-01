@@ -1,4 +1,4 @@
-// Shape returned by /api/iss, normalized from wheretheiss.at's response.
+/** Shape returned by /api/iss, normalized from wheretheiss.at's response */
 export type IssPosition = {
   latitude: number;
   longitude: number;
@@ -15,8 +15,8 @@ export type IssPosition = {
   timestamp: number;
 };
 
-// Shape returned by /api/iss/track: predicted ground tracks as [longitude, latitude] pairs,
-// oldest first, split at `computedAt` (Unix milliseconds).
+/** Shape returned by /api/iss/track: predicted ground tracks as [longitude, latitude] pairs,
+ oldest first, split at `computedAt` (Unix milliseconds) */
 export type IssTrack = {
   computedAt: number;
   past: [number, number][];
