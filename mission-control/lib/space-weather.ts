@@ -31,7 +31,7 @@ const FLARE_CLASSES = [
   ["A", 1e-8],
 ] as const;
 
-// Turns an X-ray flux into its flare class, e.g. 2.3e-6 W/m² -> "C2.3".
+/** Turns an X-ray flux into its flare class, e.g. 2.3e-6 W/m² -> "C2.3" */
 export function flareClass(flux: number): string {
   for (const [letter, base] of FLARE_CLASSES) {
     if (flux >= base) {

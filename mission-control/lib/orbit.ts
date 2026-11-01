@@ -7,7 +7,7 @@ import { degreesLat, degreesLong, eciToGeodetic, gstime, propagate, twoline2satr
 const CELESTRAK_TLE_URL = "https://celestrak.org/NORAD/elements/gp.php?CATNR=25544&FORMAT=TLE";
 const WHERETHEISS_TLE_URL = "https://api.wheretheiss.at/v1/satellites/25544/tles?format=json";
 
-// A two-line element set: the standard format for a satellite's orbit at a given moment.
+/** A two-line element set: the standard format for a satellite's orbit at a given moment */
 type Tle = {
   line1: string;
   line2: string;
@@ -34,7 +34,7 @@ async function fetchCelestrakTle(): Promise<Tle> {
   return checkTle({ line1, line2 }, "CelesTrak");
 }
 
-// Usually a few hours older than CelesTrak's, which still predicts within a few km.
+/** Usually a few hours older than CelesTrak's, which still predicts within a few km */
 async function fetchWheretheissTle(): Promise<Tle> {
   const res = await fetch(WHERETHEISS_TLE_URL);
   if (!res.ok) {
@@ -43,26 +43,28 @@ async function fetchWheretheissTle(): Promise<Tle> {
   return checkTle(await res.json(), "wheretheiss.at");
 }
 
-// CelesTrak publishes new elements a few times a day and temporarily blocks (403) clients that
-// download the same data too often, so the TLE is cached for hours and shared by every visitor,
-// with wheretheiss.at as a fallback source. Failures aren't cached, so the next request retries.
+/** CelesTrak publishes new elements a few times a day and temporarily blocks (403) clients that
+ download the same data too often, so the TLE is cached for hours and shared by every visitor,
+ with wheretheiss.at as a fallback source. Failures aren't cached, so the next request retries. */
 async function getIssTle(): Promise<Tle> {
-  "use cache";
-  cacheLife("hours");
+    "use cache";
+    cacheLife("hours");
 
   try {
     return await fetchCelestrakTle();
-  } catch (celestrakError) {
+  } 
+  catch (celestrakError) {
     try {
       return await fetchWheretheissTle();
-    } catch (fallbackError) {
+    } 
+    catch (fallbackError) {
       throw new Error(`No TLE source available: ${celestrakError}; ${fallbackError}`);
     }
   }
 }
 
-// Predicts the point on Earth directly below the satellite every `stepMs` between two times,
-// as [longitude, latitude] pairs. Accurate to a few km for a TLE that's a day or two old.
+/** Predicts the point on Earth directly below the satellite every `stepMs` between two times,
+as [longitude, latitude] pairs. Accurate to a few km for a TLE that's a day or two old */
 function groundTrack(satrec: Satrec, fromMs: number, toMs: number, stepMs: number): [number, number][] {
   const points: [number, number][] = [];
   for (let time = fromMs; time <= toMs; time += stepMs) {
